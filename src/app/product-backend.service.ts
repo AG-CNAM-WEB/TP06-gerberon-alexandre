@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ProductBackendService {
-  private productsUrl = 'assets/mock/products.json';
+  private productsUrl = 'http://localhost:3000/api/products'; // Endpoint de l'API
 
   constructor(private http: HttpClient) {}
 

@@ -1,10 +1,9 @@
 import { Component, NgModule } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, Validators } from '@angular/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Validators, AbstractControl } from '@angular/forms';
-import { Router } from '@angular/router';
-import { FormDataService } from '../form-data.service';
+import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../auth.service';
 
 @NgModule({
   imports: [
@@ -17,7 +16,7 @@ export class ClientFormModule {}
 @Component({
     selector: 'app-client-form',
     templateUrl: './client-form.component.html',
-    styleUrl: './client-form.component.css',
+    styleUrls: ['./client-form.component.css'],
 })
 export class ClientFormComponent {
   clientForm = this.formBuilder.group({
@@ -37,7 +36,11 @@ export class ClientFormComponent {
     passwordConfirm: ['', Validators.required],
   }, { validator: this.passwordMatchValidator });
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private formDataService: FormDataService) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private http: HttpClient,
+    private authService: AuthService // Injectez le service AuthService
+  ) {}
 
   passwordMatchValidator(formGroup: FormGroup): { [key: string]: boolean } | null {
     const password = formGroup.get('password')?.value;
@@ -50,12 +53,18 @@ export class ClientFormComponent {
 
     return null;
   }
+  
   onSubmit() {
     console.warn(this.clientForm.value);
-    // Stock les données dans le service
-    this.formDataService.setFormData(this.clientForm.value);
-    // Redirige vers la page de profil après la validation
-    this.router.navigate(['/profile']);
+    this.authService.register(this.clientForm.value).subscribe({
+      next: (response) => {
+        console.log(response);
+        window.location.href = '/login';
+      },
+      error: (error) => {
+        console.error('Error submitting client data:', error);
+      }
+    });
   }
 
   updateProfile() {

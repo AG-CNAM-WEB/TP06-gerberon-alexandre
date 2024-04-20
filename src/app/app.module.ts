@@ -18,6 +18,7 @@ import { GestionCartesModule } from './gestion-cartes/gestion-cartes.module';
 import { NgxsModule } from '@ngxs/store';
 import { PanierState } from './store/panier.state';
 import { PanierComponent } from './panier/panier.component';
+import { LoginComponent } from './login/login.component';
 @NgModule({
     declarations: [
         AppComponent,
@@ -28,7 +29,8 @@ import { PanierComponent } from './panier/panier.component';
         HeaderComponent,
         CatalogueComponent,
         SearchComponent,
-        PanierComponent
+        PanierComponent,
+        LoginComponent
     ],
     providers: [ProductBackendService],
     bootstrap: [AppComponent],
